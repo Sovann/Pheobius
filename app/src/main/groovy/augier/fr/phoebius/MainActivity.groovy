@@ -1,19 +1,25 @@
 package augier.fr.phoebius
 
-
+import android.app.ActionBar
+import android.app.ActionBar.Tab
+import android.app.ActionBar.TabListener
 import android.app.Activity
+import android.app.FragmentTransaction
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
+import android.support.v4.app.FragmentActivity
+import android.support.v4.view.ViewPager
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ListView
 import android.widget.MediaController
 import android.widget.MediaController.MediaPlayerControl
+import augier.fr.phoebius.UI.FragmentAdapter
 import augier.fr.phoebius.UI.SongAdapter
 import augier.fr.phoebius.core.MusicService
 import augier.fr.phoebius.core.MusicService.MusicBinder
@@ -22,7 +28,7 @@ import com.arasthel.swissknife.SwissKnife
 import com.arasthel.swissknife.annotations.InjectView
 import com.arasthel.swissknife.annotations.OnItemClick
 
-public class MainActivity extends Activity implements MediaPlayerControl
+public class MainActivity extends FragmentActivity implements MediaPlayerControl, TabListener
 {
 	public static final String APP_NAME = "Phoebius"
 	@InjectView ListView songView
@@ -33,6 +39,9 @@ public class MainActivity extends Activity implements MediaPlayerControl
 	private MusicServiceConnection musicConnection
 	private MusicController musicController
 	private MediaPlayerControl mediaPlayerControl = this
+    ActionBar actionbar;
+    ViewPager viewpager;
+    FragmentAdapter ft;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -53,8 +62,56 @@ public class MainActivity extends Activity implements MediaPlayerControl
 		musicController.setPrevNextListeners(
 			new View.OnClickListener() { @Override public void onClick(View v) { playNext() }},
 			new View.OnClickListener() { @Override public void onClick(View v) { playPrev() }})
-	}
 
+        viewpager = (ViewPager) findViewById(R.id.pager);
+        ft = new FragmentAdapter(getSupportFragmentManager());
+
+        actionbar = getActionBar();
+        viewpager.setAdapter(ft);
+        actionbar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        actionbar.addTab(actionbar.newTab().setText("Playlist").setTabListener(this));
+        actionbar.addTab(actionbar.newTab().setText("Album").setTabListener(this));
+        actionbar.addTab(actionbar.newTab().setText("Artist").setTabListener(this));
+        viewpager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+            @Override
+            public void onPageSelected(int arg0) {
+                actionbar.setSelectedNavigationItem(arg0);
+
+            }
+
+            @Override
+            public void onPageScrolled(int arg0, float arg1, int arg2) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int arg0) {
+                // TODO Auto-generated method stub
+
+            }
+        });
+
+    }
+
+    @Override
+    public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
+        viewpager.setCurrentItem(tab.getPosition());
+
+    }
+
+    @Override
+    public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
+        // TODO Auto-generated method stub
+
+    }
 	@Override
 	protected void onStart()
 	{
