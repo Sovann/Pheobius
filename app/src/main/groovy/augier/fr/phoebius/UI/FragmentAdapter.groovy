@@ -3,21 +3,16 @@ package augier.fr.phoebius.UI
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
-import augier.fr.phoebius.AlbumFragment
-import augier.fr.phoebius.ArtistFragment
-import augier.fr.phoebius.PlaylistFragment
+import augier.fr.phoebius.core.MusicService
 
-/**
- * Created by So on 29/03/2015.
- */
+
 public class FragmentAdapter extends FragmentPagerAdapter {
 
     static final int NUM_ITEMS = 3;
 
 
-
-    public FragmentAdapter(FragmentManager fm) {
-        super(fm);
+    public FragmentAdapter(FragmentManager fm , MusicService ms) {
+        super(fm, ms);
     }
 
     @Override
@@ -25,11 +20,9 @@ public class FragmentAdapter extends FragmentPagerAdapter {
         // TODO Auto-generated method stub
         switch (arg0) {
             case 0:
-                return new ArtistFragment();
+                def frag = new SongListFragment(musicService)fragmentManager.beginTransaction().add(R.id.mainPager, frag).commit()
             case 1:
-                return new AlbumFragment();
-            case 2:
-                return new PlaylistFragment();
+                def frag = new  AlbumListFragment(musicService)fragmentManager.beginTransaction().add(R.id.mainPager, frag).commit()
             default:
                 break;
         }

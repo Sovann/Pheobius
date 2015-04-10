@@ -30,7 +30,7 @@ import com.arasthel.swissknife.annotations.OnItemClick
 
 public class MainActivity extends FragmentActivity implements MediaPlayerControl, TabListener
 {
-	public static final String APP_NAME = "Phoebius"
+	public static final String APP_NAME = R.string.app_name
 	@InjectView ListView songView
 	private SongList songList
 	private MusicService musicService
@@ -48,7 +48,7 @@ public class MainActivity extends FragmentActivity implements MediaPlayerControl
 	{
 		// Class init
 		super.onCreate(savedInstanceState)
-		contentView = R.layout.activity_main
+		//contentView = R.layout.activity_main
 		SwissKnife.inject(this)
 
 		// Variables init
@@ -64,14 +64,19 @@ public class MainActivity extends FragmentActivity implements MediaPlayerControl
 			new View.OnClickListener() { @Override public void onClick(View v) { playPrev() }})
 
         viewpager = (ViewPager) findViewById(R.id.pager);
-        ft = new FragmentAdapter(getSupportFragmentManager());
+        ft = new FragmentAdapter(getSupportFragmentManager(), musicService);
+        mainPagerInit();
 
+    }
+
+    public void mainPagerInit()
+    {
         actionbar = getActionBar();
         viewpager.setAdapter(ft);
         actionbar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        actionbar.addTab(actionbar.newTab().setText("Playlist").setTabListener(this));
-        actionbar.addTab(actionbar.newTab().setText("Album").setTabListener(this));
-        actionbar.addTab(actionbar.newTab().setText("Artist").setTabListener(this));
+        actionbar.addTab(actionbar.newTab().setText(R.string.playlist_en).setTabListener(this));
+        actionbar.addTab(actionbar.newTab().setText(R.string.album).setTabListener(this));
+        actionbar.addTab(actionbar.newTab().setText(R.string.artiste).setTabListener(this));
         viewpager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
             @Override
@@ -92,7 +97,6 @@ public class MainActivity extends FragmentActivity implements MediaPlayerControl
 
             }
         });
-
     }
 
     @Override
